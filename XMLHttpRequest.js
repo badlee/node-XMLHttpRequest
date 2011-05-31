@@ -24,7 +24,7 @@ exports.XMLHttpRequest = function() {
 
 	// Holds http.js objects
 	var client;
-	var request;
+	var req;
 	var response;
 	
 	// Request settings
@@ -187,7 +187,6 @@ exports.XMLHttpRequest = function() {
 		}
 
 		// Use the proper protocol
-		var doRequest = ssl ? https.request : http.request;
 
 		var options = {
 			host: host,
@@ -197,7 +196,7 @@ exports.XMLHttpRequest = function() {
 			headers: headers
 		};
 		
-		var req = doRequest(options, function(res) {
+		req = (ssl ? https.request : http.request)(options, function(res) {
 			response = res;
 			response.setEncoding("utf8");
 
@@ -242,6 +241,7 @@ exports.XMLHttpRequest = function() {
 	 * Aborts a request.
 	 */
 	this.abort = function() {
+		try{req.abort()}catch(e){} 
 		headers = defaultHeaders;
 		this.readyState = this.UNSENT;
 		this.responseText = "";
